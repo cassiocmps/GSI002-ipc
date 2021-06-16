@@ -26,6 +26,10 @@ void cadServidor(servidor *servidores){
     	printf("|  Cadastrar novo servidor  |\n");
     	printf("*---------------------------*\n");
 
+		printf("Nome: ");
+		scanf("%s", nomeE);
+
+		// while(valido=='n'){
 		printf("CPF (somente números): ");
 		scanf("%s", cpfE);
 		
@@ -44,8 +48,7 @@ void cadServidor(servidor *servidores){
 				break;
 			}
 			else if (strlen(servidores[i].cpf)==0){ // encontrando o indice vazio
-				printf("\nNome: ");
-				scanf("%s", servidores[i].nome);
+				strcpy(servidores[i].nome, nomeE);
 				strcpy(servidores[i].cpf, cpfE);
 				printf("\nServidor %s cadastrado com sucesso! (posição %d)\n", servidores[i].nome, i);
 				cadastrar='n';
@@ -57,8 +60,8 @@ void cadServidor(servidor *servidores){
 				break;
 			}
 		}
-
-		cadastrar='n';
+		// }
+	cadastrar='n';
 		// printf("\nCadastrar outro? (s/n) ");
 		// scanf("%s", &cadastrar);
 	}
@@ -86,7 +89,7 @@ void novoPedido(servidor *servidores){
 	else {
 		for(int i=0; i<NUM_SERV; i++){ //percorre o vetor de servidores
 			for (int j=0; j<NUM_VIAG; j++){ // percorre o vetor de viagens em cada servidor
-				if ((strcmp(servidores[i].cpf, cpfE))==0){ // registra as entradas quando encontra um indice de viagem vazio
+				if (strcmp(servidores[i].cpf, cpfE)){ // registra as entradas quando encontra um indice de viagem vazio
 				printf("\nServidor %s", servidores[i].nome);
 				printf("\nInsira os dados da viagem: ");
 				
@@ -117,7 +120,7 @@ void novoPedido(servidor *servidores){
 				printf("\nOrçamento: %d", servidores[i].viagens[j].custo);
 				printf("\nId da viagem: %d", servidores[i].viagens[j].id);
 
-				return;
+				break;
 				}
 			}
 		}
@@ -127,86 +130,13 @@ void novoPedido(servidor *servidores){
 
 
 }
-/*
-void aprovarPedido(struct servidor *servidores){
-	char cpfE[11], resposta='a';
-	int idE;
-	
-	printf("\nDigite o CPF do servidor: ");
-	scanf("%s",cpfE);
-
-	for (int i=0; i<NUM_SERV; i++){
-		if((strcmp(servidores[i].cpf, cpfE))==0){
-			printf("\nDigite o id da viagem: ");
-			scanf("%d", &idE);
-			for (int j=0; j<NUM_VIAG; j++){
-				if ((servidores[i].viagens[j].id)==idE){
-					printf("\nDestino: %s", servidores[i].viagens[j].destino);
-					printf("\nData de ida: %s", servidores[i].viagens[j].ida);
-					printf("\nData de volta: %s", servidores[i].viagens[j].retorno);
-					printf("\nOrçamento: %d", servidores[i].viagens[j].custo);
-					if (servidores[i].viagens[j].aprov==true) {
-						printf("\nSituação: Aprovado\nRetornando...");
-						return;
-					}
-					if (servidores[i].viagens[j].aprov==false) {
-						printf("\nSituação: Negado\nAprovar? (s/n");
-						scanf("%s", resposta);
-						if (resposta=='s'){
-							servidores[i].viagens[j].aprov=true;
-							printf("\nAprovado com sucesso! Retornando...");
-							return;
-						}
-						if (resposta=='n'){
-							printf("\nRetornando...");
-							return;
-						}
-					}					
-				}
-				else if(j==NUM_VIAG-1){
-					printf("\nId de viagem inválido. Retornando...");
-					return;
-				}
-			}
-
-		}
-		else if (i==NUM_SERV-1){
-			printf("\nServidor não encontrado. Retornando...");
-			return;
-		}
-	}
-
-}
-*/
+// }
 
 void listarServ(struct servidor *servidores){
-	char vazio[5]={};
 	for (int i = 0; i < NUM_SERV; i++){
-		if (strcmp(servidores[i].nome, vazio)==0){return;}
-		printf("\n\nNome: %s",servidores[i].nome);
-		printf("\nCPF: %s", servidores[i].cpf);
+		printf("\nNome: %s / CPF: %s\n", servidores[i].nome, servidores[i].cpf);
 	}
 	
-}
-
-void listarTudo(struct servidor *servidores){
-	char vazio[5]={};
-
-	for (int i = 0; i < NUM_SERV; i++){
-		if (strcmp(servidores[i].nome, vazio)==0){return;}
-		printf("\n\nNome: %s",servidores[i].nome);
-		printf("\nCPF: %s", servidores[i].cpf);
-		printf("\nViagens:");
-		for(int j=0; j<NUM_VIAG; j++){
-			if (servidores[i].viagens[j].id==0){break;}
-			printf("\nId: %d", servidores[i].viagens[j].id);
-			printf("\n	Destino: %s", servidores[i].viagens[j].destino);
-			printf("\n	Data de ida: %s", servidores[i].viagens[j].ida);
-			printf("\n	Data de volta: %s", servidores[i].viagens[j].retorno);
-			printf("\n	Orçamento: %d", servidores[i].viagens[j].custo);
-			printf("\n	Aprovado: %d", servidores[i].viagens[j].aprov);
-		}
-	}	
 }
 
 void menu(){
@@ -223,7 +153,6 @@ void menu(){
 		printf("\n6- Listar pedidos de um servidor");
 		printf("\n7- Listar pedidos de um mês");
 		printf("\n8- Sair ");
-		listarTudo(servidores);
 		printf("\n\nDigite opção: ");
 		scanf("%d", &opcao);
 	
