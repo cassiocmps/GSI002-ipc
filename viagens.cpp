@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define NUM_SERV 2
+#define NUM_VIAG 2
 
 struct viagem{
 	char destino[20], ida[10], retorno[10];
@@ -12,7 +13,7 @@ struct viagem{
 
 struct servidor{
 	char nome[20], cpf[11];
-	viagem viagens[2];
+	viagem viagens[NUM_VIAG];
 };
 
 void cadServidor(servidor *servidores){
@@ -33,15 +34,16 @@ void cadServidor(servidor *servidores){
 		scanf("%s", cpfE);
 		
 		tamanho=strlen(cpfE);
-		if(tamanho<11){
+		if(tamanho!=11){
 			printf("\nCPF inválido. É necessário 11 digitos. Retornando ao menu principal.\n");
 			cadastrar='n';
+			break;
 		}
 
 		for(int i=0; i<NUM_SERV; i++){
 			comparacao=strcmp(servidores[i].cpf,cpfE);
 			if (comparacao==0){ //cpf já existente
-				printf("Servidor já cadastrado. ");
+				printf("Servidor já cadastrado. Retornando...\n");
 				cadastrar='n';
 				break;
 			}
@@ -66,56 +68,73 @@ void cadServidor(servidor *servidores){
 
 }
 
-// void novoPedido(servidor *servidores){
-// 	int cpfE;
+void novoPedido(servidor *servidores){
+	char cpfE[11], destinoE[20], idaE[10], retornoE[10];
+	int tamanho, custoE, id;
+	bool aprovE;
 
-// 	system("clear");
-// 	printf("*---------------------------*\n");
-//    	printf("|  Cadastrar novo servidor  |\n");
-//    	printf("*---------------------------*\n");
+	system("clear");
+	printf("*---------------------------*\n");
+   	printf("|   Novo pedido de viagem   |\n");
+   	printf("*---------------------------*\n");
 
-// 	printf("\nDigite o CPF do servidor:");
-// 	scanf("%d", cpfE);
+	printf("\nDigite o CPF do servidor:");
+	scanf("%s", cpfE);
 
-// 	for(int i=0; i<NUM_SERV; i++){
-// 		if (servidores[i].cpf==cpfE){
-// 			printf("\nInsira os dados da viagem: ");
-// 			printf("\nDestino: ");
-// 			scanf("%s",servidores[i].viagens.destino);
-// 			printf("\nData de ida: ");
-// 			scanf("%s",servidores[i].viagens.ida);
-// 			printf("\nData de retorno: ");
-// 			scanf("%s",servidores[i].viagens.retorno);
-// 			printf("\nEstimativa de custo total: ");
-// 			scanf("%d",servidores[i].viagens.custo);
-// 			printf("\n");
-// 			scanf("%s",);
-// 			break;
-// 		}
-// 		else if (servidores[i].cpf==0){
-// 			strcpy(servidores[i].nome, nomeE);
-// 			servidores[i].cpf = *cpfE;
-// 			printf("Servidor %s cadastrado com sucesso! (posição %d)\n", servidores[i].nome, i);
-// 			valido='s';
-// 			break;
-// 		}
-// 		else if(i==NUM_SERV){
-// 			printf("\nNúmero máximo de servidores atingido.\n");
-// 			break;
-// 		}
-// 	}
+	tamanho=strlen(cpfE);
+	if(tamanho!=11){
+		printf("\nCPF inválido. É necessário 11 digitos. Retornando ao menu principal.\n");
+	}
+
+	else {
+		for(int i=0; i<NUM_SERV; i++){ //percorre o vetor de servidores
+			for (int j=0; j<NUM_VIAG; j++){ // percorre o vetor de viagens em cada servidor
+				if (strcmp(servidores[i].cpf, cpfE)){ // registra as entradas quando encontra um indice de viagem vazio
+				printf("\nServidor %s", *servidores[i].nome);
+				printf("\nInsira os dados da viagem: ");
+				
+				printf("\nDestino: ");
+				scanf("%s", destinoE);
+				strcpy(servidores[i].viagens[j].destino, destinoE);
+				
+				printf("\nData de ida: ");
+				scanf("%s", idaE);
+				strcpy(servidores[i].viagens[j].ida, idaE);
+				
+				printf("\nData de retorno: ");
+				scanf("%s", retornoE);
+				strcpy(servidores[i].viagens[j].retorno, retornoE);
+				
+				printf("\nEstimativa de custo total (sem centavos): ");
+				scanf("%d", &custoE);
+				servidores[i].viagens[j].custo=custoE;
+				
+				servidores[i].viagens[j].aprov=false;
+				servidores[i].viagens[j].id=j+1;
+
+				printf("\nServidor: %s", servidores[i].nome);
+				printf("\nCPF: %s", servidores[i].cpf);
+				printf("\nDestino: %s", servidores[i].viagens[j].destino);
+				printf("\nData de ida: %s", servidores[i].viagens[j].ida);
+				printf("\nData de volta: %s", servidores[i].viagens[j].retorno);
+				printf("\nOrçamento: %d", servidores[i].viagens[j].custo);
+				printf("\nId da viagem: %d", servidores[i].viagens[j].id);
+
+				break;
+				}
+			}
+		}
+			
+		
+	}
 
 
-
+}
 // }
 
 void menu(){
 	int opcao;
 	servidor servidores[NUM_SERV]={};	
-			char a[3]={'a', 'b', 'c'};
-		int x = strcmp (a,servidores[0].cpf);
-
-		printf("%d", x);
 
 	while(1){
 		printf("\nBem vindo ao Sistema de registro e controle de aprovação de pedido de viagem dos servidores da UFU.\n");
@@ -131,7 +150,7 @@ void menu(){
 		scanf("%d", &opcao);
 	
 		if(opcao == 1) cadServidor(servidores);
-		// if(opcao == 2) novoPedido(servidores);
+		if(opcao == 2) novoPedido(servidores);
 		
 		
 	}
