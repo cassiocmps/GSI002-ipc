@@ -127,9 +127,9 @@ void novoPedido(servidor *servidores){
 
 
 }
-/*
+
 void aprovarPedido(struct servidor *servidores){
-	char cpfE[11], resposta='a';
+	char cpfE[11], resposta;
 	int idE;
 	
 	printf("\nDigite o CPF do servidor: ");
@@ -150,8 +150,8 @@ void aprovarPedido(struct servidor *servidores){
 						return;
 					}
 					if (servidores[i].viagens[j].aprov==false) {
-						printf("\nSituação: Negado\nAprovar? (s/n");
-						scanf("%s", resposta);
+						printf("\nSituação: Negado\nAprovar? (s/n)");
+						scanf("%c", &resposta);
 						if (resposta=='s'){
 							servidores[i].viagens[j].aprov=true;
 							printf("\nAprovado com sucesso! Retornando...");
@@ -177,7 +177,7 @@ void aprovarPedido(struct servidor *servidores){
 	}
 
 }
-*/
+
 
 void listarServ(struct servidor *servidores){
 	char vazio[5]={};
@@ -188,6 +188,27 @@ void listarServ(struct servidor *servidores){
 	}
 	
 }
+
+void listarViagens(struct servidor *servidores){
+	char vazio[5]={};
+
+	for (int i = 0; i < NUM_SERV; i++){
+		if (strcmp(servidores[i].nome, vazio)==0){return;}
+		printf("\n\nNome: %s",servidores[i].nome);
+		printf("\nCPF: %s", servidores[i].cpf);
+		printf("\nViagens:");
+		for(int j=0; j<NUM_VIAG; j++){
+			if (servidores[i].viagens[j].id==0){break;}
+			printf("\nId: %d", servidores[i].viagens[j].id);
+			printf("\n	Destino: %s", servidores[i].viagens[j].destino);
+			printf("\n	Data de ida: %s", servidores[i].viagens[j].ida);
+			printf("\n	Data de volta: %s", servidores[i].viagens[j].retorno);
+			printf("\n	Orçamento: %d", servidores[i].viagens[j].custo);
+			printf("\n	Aprovado: %d", servidores[i].viagens[j].aprov);
+		}
+	}	
+}
+
 
 void listarTudo(struct servidor *servidores){
 	char vazio[5]={};
@@ -221,7 +242,7 @@ void menu(){
 		printf("\n4- Revogar pedido");
 		printf("\n5- Listar servidores");
 		printf("\n6- Listar pedidos de um servidor");
-		printf("\n7- Listar pedidos de um mês");
+		printf("\n7- Listar tudo");
 		printf("\n8- Sair ");
 		listarTudo(servidores);
 		printf("\n\nDigite opção: ");
@@ -229,7 +250,11 @@ void menu(){
 	
 		if(opcao == 1) cadServidor(servidores);
 		if(opcao == 2) novoPedido(servidores);
-		
+		if(opcao == 3) aprovarPedido(servidores);
+		if(opcao == 5) listarServ(servidores);
+		if(opcao == 7) listarTudo(servidores);
+
+		if(opcao == 8) return;	
 		
 	}
 }
