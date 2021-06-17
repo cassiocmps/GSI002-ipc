@@ -172,13 +172,75 @@ void aprovarPedido(struct servidor *servidores){
 
 }
 
+void revogarPedido(struct servidor *servidores){
+	char cpfE[11], resposta;
+	int idE;
+	
+	printf("\nDigite o CPF do servidor: ");
+	scanf("%s",cpfE);
+
+	for (int i=0; i<NUM_SERV; i++){
+		if((strcmp(servidores[i].cpf, cpfE))==0){
+			printf("\nDigite o id da viagem: ");
+			scanf("%d", &idE);
+			for (int j=0; j<NUM_VIAG; j++){				
+				if ((servidores[i].viagens[j].id)==idE){
+					printf("\nDestino: %s", servidores[i].viagens[j].destino);
+					printf("\nData de ida: %s", servidores[i].viagens[j].ida);
+					printf("\nData de volta: %s", servidores[i].viagens[j].retorno);
+					printf("\nOrçamento: %d", servidores[i].viagens[j].custo);
+					if (servidores[i].viagens[j].aprov==false) {
+						printf("\nSituação: Negado\nRetornar...");
+						return;
+					}
+					if (servidores[i].viagens[j].aprov==true) {
+						printf("\nSituação: Aprovado\nRevogar?");
+						fflush(stdin);
+						fflush(stdout);
+						scanf(" %c", &resposta);
+						if (resposta=='s'){
+							servidores[i].viagens[j].aprov=false;
+							printf("\nRevogado com sucesso. Retornando...");
+							return;
+						}
+						if (resposta=='n'){
+							printf("\nRetornando...");
+							return;
+						}
+					}					
+				}
+				else if(j==NUM_VIAG-1){
+					printf("\nId de viagem inválido. Retornando...");
+					return;
+				}
+			}
+
+		}
+		else if (i==NUM_SERV-1){
+			printf("\nServidor não encontrado. Retornando...");
+			return;
+		}
+	}
+
+}
+
 
 void listarServ(struct servidor *servidores){
-	char vazio[5]={};
+	char nomeE[20], vazio[5]={};
+	printf("\nDigite o nome do servidor: ");
+	scanf("%s", nomeE);
+	bool encontrado = false;
+
 	for (int i = 0; i < NUM_SERV; i++){
-		if (strcmp(servidores[i].nome, vazio)==0){return;}
-		printf("\n\nNome: %s",servidores[i].nome);
-		printf("\nCPF: %s", servidores[i].cpf);
+		if (strstr(servidores[i].nome, nomeE)!=NULL){
+			encontrado = true;
+			printf("\n\nNome: %s",servidores[i].nome);
+			printf("\nCPF: %s", servidores[i].cpf);
+		}
+	}
+
+	if(!encontrado){
+		printf("\nNão encontrado. Retornando...");
 	}
 	
 }
@@ -201,6 +263,27 @@ void listarViagens(struct servidor *servidores){
 			printf("\n	Aprovado: %d", servidores[i].viagens[j].aprov);
 		}
 	}	
+}
+
+void listarPedidosServidor(struct servidor *servidores){
+	char cpfE[11];
+	
+	printf("\nDigite o CPF do servidor: ");
+	scanf("%s",cpfE);
+	for(int i=0; i<NUM_SERV; i++){
+		if (strcmp(servidores[i].cpf, cpfE)==0){
+			for(int j=0; j<NUM_VIAG; j++){
+				printf("\nId: %d", servidores[i].viagens[j].id);
+				printf("\n	Destino: %s", servidores[i].viagens[j].destino);
+				printf("\n	Data de ida: %s", servidores[i].viagens[j].ida);
+				printf("\n	Data de volta: %s", servidores[i].viagens[j].retorno);
+				printf("\n	Orçamento: %d", servidores[i].viagens[j].custo);
+				printf("\n	Aprovado: %d", servidores[i].viagens[j].aprov);
+				return;
+			}
+		}
+	}
+	
 }
 
 
@@ -238,14 +321,16 @@ void menu(){
 		printf("\n6- Listar pedidos de um servidor");
 		printf("\n7- Listar tudo");
 		printf("\n8- Sair ");
-		listarTudo(servidores);
+		//listarTudo(servidores);
 		printf("\n\nDigite opção: ");
 		scanf("%d", &opcao);
 	
 		if(opcao == 1) cadServidor(servidores);
 		if(opcao == 2) novoPedido(servidores);
 		if(opcao == 3) aprovarPedido(servidores);
+		if(opcao == 4) revogarPedido(servidores);
 		if(opcao == 5) listarServ(servidores);
+		if(opcao == 6) listarPedidosServidor(servidores);
 		if(opcao == 7) listarTudo(servidores);
 
 		if(opcao == 8) return;	
