@@ -43,7 +43,7 @@ void cadServidor(servidor *servidores){
 		}
 		else if (strlen(servidores[i].cpf)==0){ // encontrando o indice vazio
 			printf("\nNome: ");
-			scanf("%s", servidores[i].nome);
+			scanf(" %[^\n]s", servidores[i].nome);
 			strcpy(servidores[i].cpf, cpfE);
 			printf("\nServidor %s cadastrado com sucesso! (posição %d)\n", servidores[i].nome, i);
 			cadastrar='n';
