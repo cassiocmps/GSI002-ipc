@@ -20,49 +20,41 @@ void cadServidor(servidor *servidores){
 	char cadastrar='s', valido='n', nomeE[20], cpfE[11];
 	int tamanho, comparacao;
 			
-	while(cadastrar=='s'){
-		system("clear");
-		printf("*---------------------------*\n");
-    	printf("|  Cadastrar novo servidor  |\n");
-    	printf("*---------------------------*\n");
+	// system("clear");
+	printf("*---------------------------*\n");
+    printf("|  Cadastrar novo servidor  |\n");
+    printf("*---------------------------*\n");
 
-		printf("CPF (somente números): ");
-		scanf("%s", cpfE);
-		
-		tamanho=strlen(cpfE);
-		if(tamanho!=11){
-			printf("\nCPF inválido. É necessário 11 digitos. Retornando ao menu principal.\n");
+	printf("CPF (somente números): ");
+	scanf("%s", cpfE);
+	
+	tamanho=strlen(cpfE);
+	if(tamanho!=11){
+		printf("\nCPF inválido. É necessário 11 digitos. Retornando ao menu principal.\n");
+		cadastrar='n';
+	}
+
+	for(int i=0; i<NUM_SERV; i++){
+		comparacao=strcmp(servidores[i].cpf,cpfE);
+		if (comparacao==0){ //cpf já existente
+			printf("Servidor já cadastrado. Retornando...\n");
 			cadastrar='n';
 			break;
 		}
-
-		for(int i=0; i<NUM_SERV; i++){
-			comparacao=strcmp(servidores[i].cpf,cpfE);
-			if (comparacao==0){ //cpf já existente
-				printf("Servidor já cadastrado. Retornando...\n");
-				cadastrar='n';
-				break;
-			}
-			else if (strlen(servidores[i].cpf)==0){ // encontrando o indice vazio
-				printf("\nNome: ");
-				scanf("%s", servidores[i].nome);
-				strcpy(servidores[i].cpf, cpfE);
-				printf("\nServidor %s cadastrado com sucesso! (posição %d)\n", servidores[i].nome, i);
-				cadastrar='n';
-				break;
-			}
-			else if(i==NUM_SERV-1){ // sem espaço vazio fecha o cadastro
-				printf("\nNúmero máximo de servidores atingido.\n");
-				cadastrar='n';
-				break;
-			}
+		else if (strlen(servidores[i].cpf)==0){ // encontrando o indice vazio
+			printf("\nNome: ");
+			scanf("%s", servidores[i].nome);
+			strcpy(servidores[i].cpf, cpfE);
+			printf("\nServidor %s cadastrado com sucesso! (posição %d)\n", servidores[i].nome, i);
+			cadastrar='n';
+			break;
 		}
-
-		cadastrar='n';
-		// printf("\nCadastrar outro? (s/n) ");
-		// scanf("%s", &cadastrar);
+		else if(i==NUM_SERV-1){ // sem espaço vazio fecha o cadastro
+			printf("\nNúmero máximo de servidores atingido.\n");
+			cadastrar='n';
+			break;
+		}
 	}
-
 }
 
 void novoPedido(servidor *servidores){
@@ -70,7 +62,7 @@ void novoPedido(servidor *servidores){
 	int tamanho, custoE, id;
 	bool aprovE;
 
-	system("clear");
+	// system("clear");
 	printf("*---------------------------*\n");
    	printf("|   Novo pedido de viagem   |\n");
    	printf("*---------------------------*\n");
@@ -139,7 +131,7 @@ void aprovarPedido(struct servidor *servidores){
 		if((strcmp(servidores[i].cpf, cpfE))==0){
 			printf("\nDigite o id da viagem: ");
 			scanf("%d", &idE);
-			for (int j=0; j<NUM_VIAG; j++){
+			for (int j=0; j<NUM_VIAG; j++){				
 				if ((servidores[i].viagens[j].id)==idE){
 					printf("\nDestino: %s", servidores[i].viagens[j].destino);
 					printf("\nData de ida: %s", servidores[i].viagens[j].ida);
@@ -151,7 +143,9 @@ void aprovarPedido(struct servidor *servidores){
 					}
 					if (servidores[i].viagens[j].aprov==false) {
 						printf("\nSituação: Negado\nAprovar? (s/n)");
-						scanf("%c", &resposta);
+						fflush(stdin);
+						fflush(stdout);
+						scanf(" %c", &resposta);
 						if (resposta=='s'){
 							servidores[i].viagens[j].aprov=true;
 							printf("\nAprovado com sucesso! Retornando...");
